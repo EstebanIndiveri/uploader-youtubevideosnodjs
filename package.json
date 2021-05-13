@@ -4,7 +4,9 @@
   "description": "uploader-youtube",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": " ./index.js",
+    "dev": "nodemon index.js"
   },
   "author": "esteban indiveri",
   "license": "MIT",
@@ -12,6 +14,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "multer": "^1.4.2",
+    "nodemon": "^2.0.7",
     "open": "^8.0.8",
     "uuid": "^8.3.2",
     "youtube-api": "^3.0.1"
