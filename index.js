@@ -1,10 +1,10 @@
 const express=require('express');
-const youtube=require('youtube-api');
+const Youtube = require("youtube-api");
 const {v4:uuidv4}=require('uuid');
 const cors= require('cors');
 const open=require('open');
 const multer=require('multer');
-const credentials=require('./credentials.json');
+const credentials=require('./credentialesnuevas.json');
 const fs= require('fs');
 const app=express();
 
@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(cors());
 
 const storage=multer.diskStorage({
-    destination:'./uploads',
+    destination:'./',
     filename(req,file,cb){
         const newFileName=`${uuidv4()}-${file.originalname}`
         cb(null,newFileName);
@@ -39,19 +39,19 @@ app.post('/upload',uploadVideoFile,(req,res)=>{
 })
 
 app.get('/oauth2callback',(req,res)=>{
-    res.redirect('/');
+    res.redirect('http://localhost:3000/success');
     const {filename,title,description}=JSON.parse(req.query.state);
 
     oAuth.getToken(req.query.code,(err,tokens)=>{
-        if(error){
-            console.log(error)
+        if(err){
+            console.log(err)
             return;
         }
         oAuth.setCredentials(tokens);
 
-        youtube.video.insert({
+        Youtube.videos.insert({
             resource:{
-                snippet:{tile,description},
+                snippet:{title,description},
                 status:{privacyStatus:'private'}
             },
             part:'snippet,status',
@@ -59,14 +59,15 @@ app.get('/oauth2callback',(req,res)=>{
                 body:fs.createReadStream(filename)
             }
         },(error,data)=>{
-            error?console.log(error):console.log(data);
+            // if(error)console.log(error)
+            // console.log(data);
             console.log('Done');
-            process.exit();
+            // process.exit();
         })
     })
 })
 
-const oAuth=youtube.authenticate({
+const oAuth=Youtube.authenticate({
     type:'oauth',
     client_id:credentials.web.client_id,
     client_secret:credentials.web.client_secret,
